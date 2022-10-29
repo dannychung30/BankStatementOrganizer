@@ -6,14 +6,14 @@ from tkmacosx import Button
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter.font import Font
 
-def read_csv():
+def read_csv(var1): 
     global my_csv_file
     my_csv_file = file_input.get('1.0', END)
     my_csv_file = my_csv_file.removesuffix('\n')
 
     with open(my_csv_file, mode = 'r') as file:
         bank_statement = csv.reader(file)
-        if my_csv_file != '':      
+        if var1 == 1 and my_csv_file != '': # statement happens only if 음식 button is pressed   
             for rows in bank_statement:
                 # 0 - transaction date
                 # 1 - post date
@@ -22,14 +22,31 @@ def read_csv():
                 # 4 - type
                 # 5 - amount
                 # 6 - memo
+                print(rows)
                 transaction_date.append(rows[0])
                 description.append(rows[2])
                 category.append(rows[3])
                 amount.append(rows[5])
                 csv_rows.append(rows)
+            sort_list()
+        elif var1 == 2 and my_csv_file != '': # statement happens only if 시장 button is pressed
+            for rows in bank_statement:
+                # 0 - transaction date
+                # 1 - post date
+                # 2 - description
+                # 3 - category
+                # 4 - type
+                # 5 - amount
+                # 6 - memo
+                print(rows)
+                transaction_date.append(rows[0])
+                description.append(rows[2])
+                category.append(rows[3])
+                amount.append(rows[5])
+                csv_rows.append(rows)
+            sort_list()
         else:
             messagebox.showinfo(title=None, message='Please input a file first')
-        sort_list()
 
 def sort_list():
     # all values in list amount are in type:str
@@ -45,7 +62,7 @@ def sort_list():
         if i == 'Food & Drink' or i == 'Shopping': # grabbing all transactions from Food & Drink cateogry  
             amount[index].removeprefix('-') # removing the negative sign coming from a charge on the account
             output.insert(INSERT, trans_date + "    " + desc + " " + amou + '\n\n')
-        
+
         # grabbing all transactions from Shopping category and outputing to new Text called shopping_output
 
 def resize_window():
@@ -53,9 +70,12 @@ def resize_window():
     h = 1000
     root.geometry(f"{w}x{h}")
 
-def input_button():
+def input_button(option):
     try:
-        read_csv()
+        if option == 1:
+            read_csv(1)
+        elif option == 2:
+            read_csv(2)
     except:
         if my_csv_file == '':
             messagebox.showinfo(title=None, message='No file inputed')
@@ -99,19 +119,24 @@ if __name__ == '__main__':
     file_input.drop_target_register(DND_FILES)
     file_input.dnd_bind('<<Drop>>', lambda e: file_input.insert(END, e.data))
 
-    # submit button
-    submit_button = Button(root, text='입력', command=input_button, font=(root, 20))
+    # food & drink button
+    submit_button = Button(root, text='음식', command= lambda:input_button(1), font=(root, 20))
     submit_button.grid(row=2, column=0, columnspan=2)
     submit_button.config(height=50, width=100, bg='green', fg='white')
 
+    # shopping button
+    submit_button = Button(root, text='시장', command= lambda:input_button(2), font=(root, 20))
+    submit_button.grid(row=2, column=1, columnspan=3)
+    submit_button.config(height=50, width=100, bg='blue', fg='white')
+
     # reset button
     submit_button = Button(root, text='재설정', command=reset_button, font=(root, 20))
-    submit_button.grid(row=2, column=2, columnspan=1)
+    submit_button.grid(row=3, column=0, columnspan=4)
     submit_button.config(height=50, width=100, bg='red', fg='white')
 
     # quit button
     quit_button = Button(root, text='그만두다', command=quit_button,font=(root, 20))
-    quit_button.grid(row=3, column=0, columnspan=4)
+    quit_button.grid(row=4, column=0, columnspan=4)
 
     # labels above output boxes
     date_label = Label(root, text='날짜', font=(root, 30))
