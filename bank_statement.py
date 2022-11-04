@@ -2,7 +2,7 @@ import csv
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from tkmacosx import Button
+from tkmacosx import Button # required for macOS running program on macOS, not needed for running on WindowsOS devices
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter.font import Font
 
