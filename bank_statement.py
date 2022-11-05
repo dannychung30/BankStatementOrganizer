@@ -21,7 +21,7 @@ def read_csv(var1):
             # 4 - type
             # 5 - amount
             # 6 - memo
-            print(rows)
+            #print(rows)
             transaction_date.append(rows[0])
             description.append(rows[2])
             category.append(rows[3])
